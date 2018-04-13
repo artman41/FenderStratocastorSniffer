@@ -77,9 +77,15 @@ namespace GuitarSniffer {
 
         public static void Main(string[] args) {
             var devices = LivePacketDevice.AllLocalMachine; //get all the connected wifi devices
-            var xboneAdapter =
-                devices.First(x =>
+            LivePacketDevice xboneAdapter = null;
+            try {
+                xboneAdapter = devices.First(x =>
                     x.Description.ToLower().Contains("rpcap")); //get the wifi device with name 'rpcap' (usb adapter)
+            } catch (FileNotFoundException ex) {
+                Console.WriteLine("Please plug in the Xbox One Adapter!");
+                Console.Read();
+                System.Environment.Exit(-1);
+            }
             using (PacketCommunicator communicator = xboneAdapter.Open(45, PacketDeviceOpenAttributes.Promiscuous, 50)
             ) {
                 while (true) {
