@@ -7,4 +7,4 @@ By Sniffing those packets, we can listen to the inputs the guitar is sending and
 
 This way, we can register the keyboard keys as the controls for games like Guitar Hero and Clone Hero, while still using the guitar.
 
-##WinPCap is required to run this http://www.winpcap.org/
+> WinPCap is required to run this http://www.winpcap.org/
