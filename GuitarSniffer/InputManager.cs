@@ -1,10 +1,9 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace GuitarSniffer {
-    public class InputManager {
+    public static class InputManager {
         static int StrumDelay = 30;
 
         private static int AccelerometerMinSpeed = 113; //0x71
