@@ -3,7 +3,7 @@ using System.Text;
 
 namespace GuitarSniffer {
     internal class Program {
-        private  PacketSniffer ps;
+        private PacketSniffer ps;
 
         public static void Main(string[] args) => new Program().Start();
 
