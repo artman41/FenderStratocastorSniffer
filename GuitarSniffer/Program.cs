@@ -15,87 +15,86 @@ using PcapDotNet.Packets;
 
 namespace GuitarSniffer {
     internal class Program {
-        private static readonly List<ValueTuple<Regex, Key>> converter = new List<ValueTuple<Regex, Key>>() {
-            new ValueTuple<Regex, Key>(new Regex("..................00..00..01"), new Key(KeyEnum.GREEN, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A000000004000"), new Key(KeyEnum.GREEN, false)),
-            new ValueTuple<Regex, Key>(new Regex("..................00..00..02"), new Key(KeyEnum.RED, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A000000004000"), new Key(KeyEnum.RED, false)),
-            new ValueTuple<Regex, Key>(new Regex("..................00..00..04"), new Key(KeyEnum.YELLOW, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A000000004000"), new Key(KeyEnum.YELLOW, false)),
-            new ValueTuple<Regex, Key>(new Regex("..................00..00..08"), new Key(KeyEnum.BLUE, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A000000004000"), new Key(KeyEnum.BLUE, false)),
-            new ValueTuple<Regex, Key>(new Regex("..................10..00..10"), new Key(KeyEnum.ORANGE, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A000000004000"), new Key(KeyEnum.ORANGE, false)),
-            new ValueTuple<Regex, Key>(new Regex("..................02..00..00"), new Key(KeyEnum.STRUM_DOWN, true)),
-            new ValueTuple<Regex, Key>(new Regex("..................01..00..00"), new Key(KeyEnum.STRUM_UP, false)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000  0A000000004000"), new Key(KeyEnum.STRUM_RELEASE, true)),
+        private static readonly List<ValueTuple<Regex, Key>> Converter = new List<ValueTuple<Regex, Key>>() {
+            new ValueTuple<Regex, Key>(new Regex("..................00..00..01"), new Key(KeyEnum.Green, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A000000004000"), new Key(KeyEnum.Green, false)),
+            new ValueTuple<Regex, Key>(new Regex("..................00..00..02"), new Key(KeyEnum.Red, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A000000004000"), new Key(KeyEnum.Red, false)),
+            new ValueTuple<Regex, Key>(new Regex("..................00..00..04"), new Key(KeyEnum.Yellow, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A000000004000"), new Key(KeyEnum.Yellow, false)),
+            new ValueTuple<Regex, Key>(new Regex("..................00..00..08"), new Key(KeyEnum.Blue, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A000000004000"), new Key(KeyEnum.Blue, false)),
+            new ValueTuple<Regex, Key>(new Regex("..................10..00..10"), new Key(KeyEnum.Orange, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A000000004000"), new Key(KeyEnum.Orange, false)),
+            new ValueTuple<Regex, Key>(new Regex("..................02..00..00"), new Key(KeyEnum.StrumDown, true)),
+            new ValueTuple<Regex, Key>(new Regex("..................01..00..00"), new Key(KeyEnum.StrumUp, false)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000  0A000000004000"), new Key(KeyEnum.StrumRelease, true)),
             //new ValueTuple<Regex, Key>(new Regex("....00002000..0A000000FE4000"), new Key(KeyEnum.WHAMMY, false)),
             //new ValueTuple<Regex, Key>(new Regex("....00002000..0A000000FF4000"), new Key(KeyEnum.WHAMMY, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A100100004001"), new Key(KeyEnum.GREENSU, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A100200004001"), new Key(KeyEnum.GREENSD, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A200100004002"), new Key(KeyEnum.REDSU, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A800100004004"), new Key(KeyEnum.YELLOWSU, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A400100004008"), new Key(KeyEnum.BLUESU, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A001100004010"), new Key(KeyEnum.ORANGESU, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A200200004002"), new Key(KeyEnum.REDSD, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A800200004004"), new Key(KeyEnum.YELLOWSD, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A400200004008"), new Key(KeyEnum.BLUESD, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A001200004010"), new Key(KeyEnum.ORANGESD, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A300000004003"), new Key(KeyEnum.GREENRED, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A900000004005"), new Key(KeyEnum.GREENYELLOW, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A500000004009"), new Key(KeyEnum.GREENBLUE, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A101000004011"), new Key(KeyEnum.GREENORANGE, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0AA00000004006"), new Key(KeyEnum.REDYELLOW, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A60000000400A"), new Key(KeyEnum.REDBLUE, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A201000004012"), new Key(KeyEnum.REDORANGE, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0AC0000000400C"), new Key(KeyEnum.YELLOWBLUE, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A801000004014"), new Key(KeyEnum.YELLOWORANGE, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A401000004018"), new Key(KeyEnum.BLUEORANGE, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A300100004003"), new Key(KeyEnum.GREENREDSU, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A900100004005"), new Key(KeyEnum.GREENYELLOWSU, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A500100004009"), new Key(KeyEnum.GREENBLUESU, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A101100004011"), new Key(KeyEnum.GREENORANGESU, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0AA00100004006"), new Key(KeyEnum.REDYELLOWSU, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A60010000400A"), new Key(KeyEnum.REDBLUESU, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A201100004012"), new Key(KeyEnum.REDORANGESU, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0AC0010000400C"), new Key(KeyEnum.YELLOWBLUESU, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A801100004014"), new Key(KeyEnum.YELLOWORANGESU, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A401100004018"), new Key(KeyEnum.BLUEORANGESU, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A300200004003"), new Key(KeyEnum.GREENREDSD, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A900200004005"), new Key(KeyEnum.GREENYELLOWSD, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A500200004009"), new Key(KeyEnum.GREENBLUESD, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A101200004011"), new Key(KeyEnum.GREENORANGESD, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0AA00200004006"), new Key(KeyEnum.REDYELLOWSD, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A60020000400A"), new Key(KeyEnum.REDBLUESD, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A201200004012"), new Key(KeyEnum.REDORANGESD, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0AC0020000400C"), new Key(KeyEnum.YELLOWBLUESD, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A801200004014"), new Key(KeyEnum.YELLOWORANGESD, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A401200004018"), new Key(KeyEnum.BLUEORANGESD, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A040000004000"), new Key(KeyEnum.STARTBUTTON, true)),
-            new ValueTuple<Regex, Key>(new Regex("....00002000..0A080000004000"), new Key(KeyEnum.MENUBUTTON, true))
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A100100004001"), new Key(KeyEnum.Greensu, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A100200004001"), new Key(KeyEnum.Greensd, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A200100004002"), new Key(KeyEnum.Redsu, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A800100004004"), new Key(KeyEnum.Yellowsu, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A400100004008"), new Key(KeyEnum.Bluesu, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A001100004010"), new Key(KeyEnum.Orangesu, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A200200004002"), new Key(KeyEnum.Redsd, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A800200004004"), new Key(KeyEnum.Yellowsd, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A400200004008"), new Key(KeyEnum.Bluesd, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A001200004010"), new Key(KeyEnum.Orangesd, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A300000004003"), new Key(KeyEnum.Greenred, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A900000004005"), new Key(KeyEnum.Greenyellow, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A500000004009"), new Key(KeyEnum.Greenblue, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A101000004011"), new Key(KeyEnum.Greenorange, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0AA00000004006"), new Key(KeyEnum.Redyellow, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A60000000400A"), new Key(KeyEnum.Redblue, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A201000004012"), new Key(KeyEnum.Redorange, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0AC0000000400C"), new Key(KeyEnum.Yellowblue, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A801000004014"), new Key(KeyEnum.Yelloworange, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A401000004018"), new Key(KeyEnum.Blueorange, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A300100004003"), new Key(KeyEnum.Greenredsu, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A900100004005"), new Key(KeyEnum.Greenyellowsu, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A500100004009"), new Key(KeyEnum.Greenbluesu, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A101100004011"), new Key(KeyEnum.Greenorangesu, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0AA00100004006"), new Key(KeyEnum.Redyellowsu, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A60010000400A"), new Key(KeyEnum.Redbluesu, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A201100004012"), new Key(KeyEnum.Redorangesu, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0AC0010000400C"), new Key(KeyEnum.Yellowbluesu, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A801100004014"), new Key(KeyEnum.Yelloworangesu, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A401100004018"), new Key(KeyEnum.Blueorangesu, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A300200004003"), new Key(KeyEnum.Greenredsd, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A900200004005"), new Key(KeyEnum.Greenyellowsd, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A500200004009"), new Key(KeyEnum.Greenbluesd, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A101200004011"), new Key(KeyEnum.Greenorangesd, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0AA00200004006"), new Key(KeyEnum.Redyellowsd, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A60020000400A"), new Key(KeyEnum.Redbluesd, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A201200004012"), new Key(KeyEnum.Redorangesd, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0AC0020000400C"), new Key(KeyEnum.Yellowbluesd, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A801200004014"), new Key(KeyEnum.Yelloworangesd, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A401200004018"), new Key(KeyEnum.Blueorangesd, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A040000004000"), new Key(KeyEnum.Startbutton, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A080000004000"), new Key(KeyEnum.Menubutton, true)),
+            new ValueTuple<Regex, Key>(new Regex("....00002000..0A0000..004000"), new Key(KeyEnum.Accelerometer, true))
         };
 
         public static void Main(string[] args) {
-            var devices = LivePacketDevice.AllLocalMachine; //get all the connected wifi devices
-            LivePacketDevice xboneAdapter = null;
-            try {
-                xboneAdapter = devices.First(x =>
-                    x.Description.ToLower().Contains("rpcap")); //get the wifi device with name 'rpcap' (usb adapter)
-            } catch (FileNotFoundException ex) {
-                Console.WriteLine("Please plug in the Xbox One Adapter!");
-                Console.Read();
-                System.Environment.Exit(-1);
-            }
-            using (PacketCommunicator communicator = xboneAdapter.Open(45, PacketDeviceOpenAttributes.Promiscuous, 50)
-            ) {
-                while (true) {
-                    var result = communicator.ReceiveSomePackets(out int packetsSniffed, 5,
-                        PacketHandler); //begin the packet handler
-                    //Console.WriteLine($"Sniffed {packetsSniffed} packets");
-                }
-            }
-
-            Console.Read();
+             var devices = LivePacketDevice.AllLocalMachine; //get all the connected wifi devices
+             LivePacketDevice xboneAdapter = null;
+             try {
+                 xboneAdapter = devices.First(x =>
+                     x.Description.ToLower().Contains("rpcap")); //get the wifi device with name 'rpcap' (usb adapter)
+             } catch (FileNotFoundException ex) {
+                 Console.WriteLine("Please plug in the Xbox One Adapter!");
+                 Console.Read();
+                 Environment.Exit(-1);
+             }
+             using (PacketCommunicator communicator = xboneAdapter.Open(45, PacketDeviceOpenAttributes.Promiscuous, 50)
+             ) {
+                 while (true) {
+                     var result = communicator.ReceiveSomePackets(out int packetsSniffed, 5,
+                         PacketHandler); //begin the packet handler
+                     //Console.WriteLine($"Sniffed {packetsSniffed} packets");
+                 }
+             }
         }
 
         static string DiffInString(string s, string multi) {
@@ -121,7 +120,7 @@ namespace GuitarSniffer {
         }
 
         //here we're trying to remember the last key pushed so that we know the key that is released next
-        static KeyEnum oldKey = KeyEnum.NULL;
+        static KeyEnum _oldKey = KeyEnum.Null;
 
         private static void PacketHandler(Packet packet) {
             //Console.WriteLine($"PACKET HANDLED, SIZE: {packet.Count}");
@@ -134,7 +133,7 @@ namespace GuitarSniffer {
             var useableData = data.ReadBytes(21, 15);
 
             var code = BitConverter.ToString(useableData).Replace("-", "");
-            if (converter.All(o => !o.Item1.IsMatch(code))) {
+            if (Converter.All(o => !o.Item1.IsMatch(code))) {
                 bool b = false;
                 Console.WriteLine($"{(b ? "Key not handled, Data: " : "")}{BitConverter.ToString(data)}");
                 return;
@@ -142,395 +141,402 @@ namespace GuitarSniffer {
 
             //Console.WriteLine("WE GOT TO HERE");
             ValueTuple<Regex, Key> key = new ValueTuple<Regex, Key>(new Regex(""), new Key());
-            var count = converter.Count(o => o.Item1.IsMatch(code));
+            var count = Converter.Count(o => o.Item1.IsMatch(code));
             if (count == 1) {
-                key = converter.First(o => o.Item1.IsMatch(code));
-                switch (key.Item2.code) {
-                    case KeyEnum.GREEN:
-                        InputManager.Down.Green();
-                        break;
-                    case KeyEnum.RED:
-                        InputManager.Down.Red();
-                        break;
-                    case KeyEnum.YELLOW:
-                        InputManager.Down.Yellow();
-                        break;
-                    case KeyEnum.BLUE:
-                        InputManager.Down.Blue();
-                        break;
-                    case KeyEnum.ORANGE:
-                        InputManager.Down.Orange();
-                        break;
-                    case KeyEnum.STRUM_UP:
-                        InputManager.Up.Strum();
-                        break;
-                    case KeyEnum.STRUM_DOWN:
-                        InputManager.Down.Strum();
-                        break;
-                    case KeyEnum.GREENSU:
-                        InputManager.Down.Green();
-                        InputManager.Up.Strum();
-                        break;
-                    case KeyEnum.GREENSD:
-                        InputManager.Down.Green();
-                        InputManager.Down.Strum();
-                        break;
-                    case KeyEnum.REDSU:
-                        InputManager.Down.Red();
-                        InputManager.Up.Strum();
-                        break;
-                    case KeyEnum.REDSD:
-                        InputManager.Down.Red();
-                        InputManager.Down.Strum();
-                        break;
-                    case KeyEnum.YELLOWSU:
-                        InputManager.Down.Yellow();
-                        InputManager.Up.Strum();
-                        break;
-                    case KeyEnum.YELLOWSD:
-                        InputManager.Down.Yellow();
-                        InputManager.Down.Strum();
-                        break;
-                    case KeyEnum.BLUESU:
-                        InputManager.Down.Blue();
-                        InputManager.Up.Strum();
-                        break;
-                    case KeyEnum.BLUESD:
-                        InputManager.Down.Blue();
-                        InputManager.Down.Strum();
-                        break;
-                    case KeyEnum.ORANGESU:
-                        InputManager.Down.Orange();
-                        InputManager.Up.Strum();
-                        break;
-                    case KeyEnum.ORANGESD:
-                        InputManager.Down.Orange();
-                        InputManager.Down.Strum();
-                        break;
-                    case KeyEnum.GREENRED:
-                        InputManager.Down.Green();
-                        InputManager.Down.Red();
-                        break;
-                    case KeyEnum.GREENYELLOW:
-                        InputManager.Down.Green();
-                        InputManager.Down.Yellow();
-                        break;
-                    case KeyEnum.GREENBLUE:
-                        InputManager.Down.Green();
-                        InputManager.Down.Blue();
-                        break;
-                    case KeyEnum.GREENORANGE:
-                        InputManager.Down.Green();
-                        InputManager.Down.Orange();
-                        break;
-                    case KeyEnum.REDYELLOW:
-                        InputManager.Down.Red();
-                        InputManager.Down.Yellow();
-                        break;
-                    case KeyEnum.REDBLUE:
-                        InputManager.Down.Red();
-                        InputManager.Down.Blue();
-                        break;
-                    case KeyEnum.REDORANGE:
-                        InputManager.Down.Red();
-                        InputManager.Down.Orange();
-                        break;
-                    case KeyEnum.YELLOWBLUE:
-                        InputManager.Down.Yellow();
-                        InputManager.Down.Blue();
-                        break;
-                    case KeyEnum.YELLOWORANGE:
-                        InputManager.Down.Yellow();
-                        InputManager.Down.Orange();
-                        break;
-                    case KeyEnum.BLUEORANGE:
-                        InputManager.Down.Blue();
-                        InputManager.Down.Orange();
-                        break;
-                    case KeyEnum.GREENREDSD:
-                        InputManager.Down.Green();
-                        InputManager.Down.Red();
-                        InputManager.Down.Strum();
-                        break;
-                    case KeyEnum.GREENYELLOWSD:
-                        InputManager.Down.Green();
-                        InputManager.Down.Yellow();
-                        InputManager.Down.Strum();
-                        break;
-                    case KeyEnum.GREENBLUESD:
-                        InputManager.Down.Green();
-                        InputManager.Down.Blue();
-                        InputManager.Down.Strum();
-                        break;
-                    case KeyEnum.GREENORANGESD:
-                        InputManager.Down.Green();
-                        InputManager.Down.Orange();
-                        InputManager.Down.Strum();
-                        break;
-                    case KeyEnum.REDYELLOWSD:
-                        InputManager.Down.Red();
-                        InputManager.Down.Yellow();
-                        InputManager.Down.Strum();
-                        break;
-                    case KeyEnum.REDBLUESD:
-                        InputManager.Down.Red();
-                        InputManager.Down.Blue();
-                        InputManager.Down.Strum();
-                        break;
-                    case KeyEnum.REDORANGESD:
-                        InputManager.Down.Red();
-                        InputManager.Down.Orange();
-                        InputManager.Down.Strum();
-                        break;
-                    case KeyEnum.YELLOWBLUESD:
-                        InputManager.Down.Yellow();
-                        InputManager.Down.Blue();
-                        InputManager.Down.Strum();
-                        break;
-                    case KeyEnum.YELLOWORANGESD:
-                        InputManager.Down.Yellow();
-                        InputManager.Down.Orange();
-                        InputManager.Down.Strum();
-                        break;
-                    case KeyEnum.BLUEORANGESD:
-                        InputManager.Down.Blue();
-                        InputManager.Down.Orange();
-                        InputManager.Down.Strum();
-                        break;
-                    case KeyEnum.GREENREDSU:
-                        InputManager.Up.Green();
-                        InputManager.Up.Red();
-                        InputManager.Up.Strum();
-                        break;
-                    case KeyEnum.GREENYELLOWSU:
-                        InputManager.Up.Green();
-                        InputManager.Up.Yellow();
-                        InputManager.Up.Strum();
-                        break;
-                    case KeyEnum.GREENBLUESU:
-                        InputManager.Up.Green();
-                        InputManager.Up.Blue();
-                        InputManager.Up.Strum();
-                        break;
-                    case KeyEnum.GREENORANGESU:
-                        InputManager.Up.Green();
-                        InputManager.Up.Orange();
-                        InputManager.Up.Strum();
-                        break;
-                    case KeyEnum.REDYELLOWSU:
-                        InputManager.Up.Red();
-                        InputManager.Up.Yellow();
-                        InputManager.Up.Strum();
-                        break;
-                    case KeyEnum.REDBLUESU:
-                        InputManager.Up.Red();
-                        InputManager.Up.Blue();
-                        InputManager.Up.Strum();
-                        break;
-                    case KeyEnum.REDORANGESU:
-                        InputManager.Up.Red();
-                        InputManager.Up.Orange();
-                        InputManager.Up.Strum();
-                        break;
-                    case KeyEnum.YELLOWBLUESU:
-                        InputManager.Up.Yellow();
-                        InputManager.Up.Blue();
-                        InputManager.Up.Strum();
-                        break;
-                    case KeyEnum.YELLOWORANGESU:
-                        InputManager.Up.Yellow();
-                        InputManager.Up.Orange();
-                        InputManager.Up.Strum();
-                        break;
-                    case KeyEnum.BLUEORANGESU:
-                        InputManager.Up.Blue();
-                        InputManager.Up.Orange();
-                        InputManager.Up.Strum();
-                        break;
-                    case KeyEnum.STARTBUTTON:
-                        InputManager.Start();
-                        break;
-                    case KeyEnum.MENUBUTTON:
-                        InputManager.Menu();
-                        break;
-                }
+                key = Converter.First(o => o.Item1.IsMatch(code));
+                if (key.Item2.Code == KeyEnum.Accelerometer) {
+                    var speedAmount = code.Substring(22, 2);
+                    //Console.WriteLine(speedAmount);
+                    InputManager.Accelerometer(speedAmount);
+                } else {
+                    switch (key.Item2.Code) {
+                        case KeyEnum.Green:
+                            InputManager.Down.Green();
+                            break;
+                        case KeyEnum.Red:
+                            InputManager.Down.Red();
+                            break;
+                        case KeyEnum.Yellow:
+                            InputManager.Down.Yellow();
+                            break;
+                        case KeyEnum.Blue:
+                            InputManager.Down.Blue();
+                            break;
+                        case KeyEnum.Orange:
+                            InputManager.Down.Orange();
+                            break;
+                        case KeyEnum.StrumUp:
+                            InputManager.Up.Strum();
+                            break;
+                        case KeyEnum.StrumDown:
+                            InputManager.Down.Strum();
+                            break;
+                        case KeyEnum.Greensu:
+                            InputManager.Down.Green();
+                            InputManager.Up.Strum();
+                            break;
+                        case KeyEnum.Greensd:
+                            InputManager.Down.Green();
+                            InputManager.Down.Strum();
+                            break;
+                        case KeyEnum.Redsu:
+                            InputManager.Down.Red();
+                            InputManager.Up.Strum();
+                            break;
+                        case KeyEnum.Redsd:
+                            InputManager.Down.Red();
+                            InputManager.Down.Strum();
+                            break;
+                        case KeyEnum.Yellowsu:
+                            InputManager.Down.Yellow();
+                            InputManager.Up.Strum();
+                            break;
+                        case KeyEnum.Yellowsd:
+                            InputManager.Down.Yellow();
+                            InputManager.Down.Strum();
+                            break;
+                        case KeyEnum.Bluesu:
+                            InputManager.Down.Blue();
+                            InputManager.Up.Strum();
+                            break;
+                        case KeyEnum.Bluesd:
+                            InputManager.Down.Blue();
+                            InputManager.Down.Strum();
+                            break;
+                        case KeyEnum.Orangesu:
+                            InputManager.Down.Orange();
+                            InputManager.Up.Strum();
+                            break;
+                        case KeyEnum.Orangesd:
+                            InputManager.Down.Orange();
+                            InputManager.Down.Strum();
+                            break;
+                        case KeyEnum.Greenred:
+                            InputManager.Down.Green();
+                            InputManager.Down.Red();
+                            break;
+                        case KeyEnum.Greenyellow:
+                            InputManager.Down.Green();
+                            InputManager.Down.Yellow();
+                            break;
+                        case KeyEnum.Greenblue:
+                            InputManager.Down.Green();
+                            InputManager.Down.Blue();
+                            break;
+                        case KeyEnum.Greenorange:
+                            InputManager.Down.Green();
+                            InputManager.Down.Orange();
+                            break;
+                        case KeyEnum.Redyellow:
+                            InputManager.Down.Red();
+                            InputManager.Down.Yellow();
+                            break;
+                        case KeyEnum.Redblue:
+                            InputManager.Down.Red();
+                            InputManager.Down.Blue();
+                            break;
+                        case KeyEnum.Redorange:
+                            InputManager.Down.Red();
+                            InputManager.Down.Orange();
+                            break;
+                        case KeyEnum.Yellowblue:
+                            InputManager.Down.Yellow();
+                            InputManager.Down.Blue();
+                            break;
+                        case KeyEnum.Yelloworange:
+                            InputManager.Down.Yellow();
+                            InputManager.Down.Orange();
+                            break;
+                        case KeyEnum.Blueorange:
+                            InputManager.Down.Blue();
+                            InputManager.Down.Orange();
+                            break;
+                        case KeyEnum.Greenredsd:
+                            InputManager.Down.Green();
+                            InputManager.Down.Red();
+                            InputManager.Down.Strum();
+                            break;
+                        case KeyEnum.Greenyellowsd:
+                            InputManager.Down.Green();
+                            InputManager.Down.Yellow();
+                            InputManager.Down.Strum();
+                            break;
+                        case KeyEnum.Greenbluesd:
+                            InputManager.Down.Green();
+                            InputManager.Down.Blue();
+                            InputManager.Down.Strum();
+                            break;
+                        case KeyEnum.Greenorangesd:
+                            InputManager.Down.Green();
+                            InputManager.Down.Orange();
+                            InputManager.Down.Strum();
+                            break;
+                        case KeyEnum.Redyellowsd:
+                            InputManager.Down.Red();
+                            InputManager.Down.Yellow();
+                            InputManager.Down.Strum();
+                            break;
+                        case KeyEnum.Redbluesd:
+                            InputManager.Down.Red();
+                            InputManager.Down.Blue();
+                            InputManager.Down.Strum();
+                            break;
+                        case KeyEnum.Redorangesd:
+                            InputManager.Down.Red();
+                            InputManager.Down.Orange();
+                            InputManager.Down.Strum();
+                            break;
+                        case KeyEnum.Yellowbluesd:
+                            InputManager.Down.Yellow();
+                            InputManager.Down.Blue();
+                            InputManager.Down.Strum();
+                            break;
+                        case KeyEnum.Yelloworangesd:
+                            InputManager.Down.Yellow();
+                            InputManager.Down.Orange();
+                            InputManager.Down.Strum();
+                            break;
+                        case KeyEnum.Blueorangesd:
+                            InputManager.Down.Blue();
+                            InputManager.Down.Orange();
+                            InputManager.Down.Strum();
+                            break;
+                        case KeyEnum.Greenredsu:
+                            InputManager.Up.Green();
+                            InputManager.Up.Red();
+                            InputManager.Up.Strum();
+                            break;
+                        case KeyEnum.Greenyellowsu:
+                            InputManager.Up.Green();
+                            InputManager.Up.Yellow();
+                            InputManager.Up.Strum();
+                            break;
+                        case KeyEnum.Greenbluesu:
+                            InputManager.Up.Green();
+                            InputManager.Up.Blue();
+                            InputManager.Up.Strum();
+                            break;
+                        case KeyEnum.Greenorangesu:
+                            InputManager.Up.Green();
+                            InputManager.Up.Orange();
+                            InputManager.Up.Strum();
+                            break;
+                        case KeyEnum.Redyellowsu:
+                            InputManager.Up.Red();
+                            InputManager.Up.Yellow();
+                            InputManager.Up.Strum();
+                            break;
+                        case KeyEnum.Redbluesu:
+                            InputManager.Up.Red();
+                            InputManager.Up.Blue();
+                            InputManager.Up.Strum();
+                            break;
+                        case KeyEnum.Redorangesu:
+                            InputManager.Up.Red();
+                            InputManager.Up.Orange();
+                            InputManager.Up.Strum();
+                            break;
+                        case KeyEnum.Yellowbluesu:
+                            InputManager.Up.Yellow();
+                            InputManager.Up.Blue();
+                            InputManager.Up.Strum();
+                            break;
+                        case KeyEnum.Yelloworangesu:
+                            InputManager.Up.Yellow();
+                            InputManager.Up.Orange();
+                            InputManager.Up.Strum();
+                            break;
+                        case KeyEnum.Blueorangesu:
+                            InputManager.Up.Blue();
+                            InputManager.Up.Orange();
+                            InputManager.Up.Strum();
+                            break;
+                        case KeyEnum.Startbutton:
+                            InputManager.Start();
+                            break;
+                        case KeyEnum.Menubutton:
+                            InputManager.Menu();
+                            break;
+                    }
 
-                oldKey = key.Item2.code;
+                    _oldKey = key.Item2.Code;
+                }
             } else if (count > 1) {
-                switch (oldKey) {
-                    case KeyEnum.GREENSU:
-                    case KeyEnum.GREENSD:
-                    case KeyEnum.GREEN:
-                        key = converter.First(o => o.Item1.IsMatch(code) && o.Item2.code == KeyEnum.GREEN);
+                switch (_oldKey) {
+                    case KeyEnum.Greensu:
+                    case KeyEnum.Greensd:
+                    case KeyEnum.Green:
+                        key = Converter.First(o => o.Item1.IsMatch(code) && o.Item2.Code == KeyEnum.Green);
                         InputManager.Up.Green();
                         break;
-                    case KeyEnum.REDSU:
-                    case KeyEnum.REDSD:
-                    case KeyEnum.RED:
-                        key = converter.First(o => o.Item1.IsMatch(code) && o.Item2.code == KeyEnum.RED);
+                    case KeyEnum.Redsu:
+                    case KeyEnum.Redsd:
+                    case KeyEnum.Red:
+                        key = Converter.First(o => o.Item1.IsMatch(code) && o.Item2.Code == KeyEnum.Red);
                         InputManager.Up.Red();
                         break;
-                    case KeyEnum.YELLOWSU:
-                    case KeyEnum.YELLOWSD:
-                    case KeyEnum.YELLOW:
-                        key = converter.First(o => o.Item1.IsMatch(code) && o.Item2.code == KeyEnum.YELLOW);
+                    case KeyEnum.Yellowsu:
+                    case KeyEnum.Yellowsd:
+                    case KeyEnum.Yellow:
+                        key = Converter.First(o => o.Item1.IsMatch(code) && o.Item2.Code == KeyEnum.Yellow);
                         InputManager.Up.Yellow();
                         break;
-                    case KeyEnum.BLUESU:
-                    case KeyEnum.BLUESD:
-                    case KeyEnum.BLUE:
-                        key = converter.First(o => o.Item1.IsMatch(code) && o.Item2.code == KeyEnum.BLUE);
+                    case KeyEnum.Bluesu:
+                    case KeyEnum.Bluesd:
+                    case KeyEnum.Blue:
+                        key = Converter.First(o => o.Item1.IsMatch(code) && o.Item2.Code == KeyEnum.Blue);
                         InputManager.Up.Blue();
                         break;
-                    case KeyEnum.ORANGESU:
-                    case KeyEnum.ORANGESD:
-                    case KeyEnum.ORANGE:
-                        key = converter.First(o => o.Item1.IsMatch(code) && o.Item2.code == KeyEnum.ORANGE);
+                    case KeyEnum.Orangesu:
+                    case KeyEnum.Orangesd:
+                    case KeyEnum.Orange:
+                        key = Converter.First(o => o.Item1.IsMatch(code) && o.Item2.Code == KeyEnum.Orange);
                         InputManager.Up.Orange();
                         break;
-                    case KeyEnum.GREENREDSU:
-                    case KeyEnum.GREENREDSD:
-                    case KeyEnum.GREENRED:
-                        key = converter.First(o => o.Item1.IsMatch(code) && o.Item2.code == KeyEnum.GREENRED);
+                    case KeyEnum.Greenredsu:
+                    case KeyEnum.Greenredsd:
+                    case KeyEnum.Greenred:
+                        key = Converter.First(o => o.Item1.IsMatch(code) && o.Item2.Code == KeyEnum.Greenred);
                         InputManager.Up.Green();
                         InputManager.Up.Red();
                         break;
-                    case KeyEnum.GREENYELLOWSU:
-                    case KeyEnum.GREENYELLOWSD:
-                    case KeyEnum.GREENYELLOW:
-                        key = converter.First(o => o.Item1.IsMatch(code) && o.Item2.code == KeyEnum.GREENYELLOW);
+                    case KeyEnum.Greenyellowsu:
+                    case KeyEnum.Greenyellowsd:
+                    case KeyEnum.Greenyellow:
+                        key = Converter.First(o => o.Item1.IsMatch(code) && o.Item2.Code == KeyEnum.Greenyellow);
                         InputManager.Up.Green();
                         InputManager.Up.Yellow();
                         break;
                     
-                    case KeyEnum.GREENBLUESU:
-                    case KeyEnum.GREENBLUESD:
-                    case KeyEnum.GREENBLUE:
-                        key = converter.First(o => o.Item1.IsMatch(code) && o.Item2.code == KeyEnum.GREENBLUE);
+                    case KeyEnum.Greenbluesu:
+                    case KeyEnum.Greenbluesd:
+                    case KeyEnum.Greenblue:
+                        key = Converter.First(o => o.Item1.IsMatch(code) && o.Item2.Code == KeyEnum.Greenblue);
                         InputManager.Up.Green();
                         InputManager.Up.Blue();
                         break;
-                    case KeyEnum.GREENORANGESU:
-                    case KeyEnum.GREENORANGESD:
-                    case KeyEnum.GREENORANGE:
-                        key = converter.First(o => o.Item1.IsMatch(code) && o.Item2.code == KeyEnum.GREENORANGE);
+                    case KeyEnum.Greenorangesu:
+                    case KeyEnum.Greenorangesd:
+                    case KeyEnum.Greenorange:
+                        key = Converter.First(o => o.Item1.IsMatch(code) && o.Item2.Code == KeyEnum.Greenorange);
                         InputManager.Up.Green();
                         InputManager.Up.Orange();
                         break;
-                    case KeyEnum.REDYELLOWSU:
-                    case KeyEnum.REDYELLOWSD:
-                    case KeyEnum.REDYELLOW:
-                        key = converter.First(o => o.Item1.IsMatch(code) && o.Item2.code == KeyEnum.REDYELLOW);
+                    case KeyEnum.Redyellowsu:
+                    case KeyEnum.Redyellowsd:
+                    case KeyEnum.Redyellow:
+                        key = Converter.First(o => o.Item1.IsMatch(code) && o.Item2.Code == KeyEnum.Redyellow);
                         InputManager.Up.Red();
                         InputManager.Up.Yellow();
                         break;
-                    case KeyEnum.REDBLUESU:
-                    case KeyEnum.REDBLUESD:
-                    case KeyEnum.REDBLUE:
-                        key = converter.First(o => o.Item1.IsMatch(code) && o.Item2.code == KeyEnum.REDBLUE);
+                    case KeyEnum.Redbluesu:
+                    case KeyEnum.Redbluesd:
+                    case KeyEnum.Redblue:
+                        key = Converter.First(o => o.Item1.IsMatch(code) && o.Item2.Code == KeyEnum.Redblue);
                         InputManager.Up.Red();
                         InputManager.Up.Blue();
                         break;
-                    case KeyEnum.REDORANGESU:
-                    case KeyEnum.REDORANGESD:
-                    case KeyEnum.REDORANGE:
-                        key = converter.First(o => o.Item1.IsMatch(code) && o.Item2.code == KeyEnum.REDORANGE);
+                    case KeyEnum.Redorangesu:
+                    case KeyEnum.Redorangesd:
+                    case KeyEnum.Redorange:
+                        key = Converter.First(o => o.Item1.IsMatch(code) && o.Item2.Code == KeyEnum.Redorange);
                         InputManager.Up.Red();
                         InputManager.Up.Orange();
                         break;
-                    case KeyEnum.YELLOWBLUESU:
-                    case KeyEnum.YELLOWBLUESD:
-                    case KeyEnum.YELLOWBLUE:
-                        key = converter.First(o => o.Item1.IsMatch(code) && o.Item2.code == KeyEnum.YELLOWBLUE);
+                    case KeyEnum.Yellowbluesu:
+                    case KeyEnum.Yellowbluesd:
+                    case KeyEnum.Yellowblue:
+                        key = Converter.First(o => o.Item1.IsMatch(code) && o.Item2.Code == KeyEnum.Yellowblue);
                         InputManager.Up.Yellow();
                         InputManager.Up.Blue();
                         break;
-                    case KeyEnum.YELLOWORANGESU:
-                    case KeyEnum.YELLOWORANGESD:
-                    case KeyEnum.YELLOWORANGE:
-                        key = converter.First(o => o.Item1.IsMatch(code) && o.Item2.code == KeyEnum.YELLOWORANGE);
+                    case KeyEnum.Yelloworangesu:
+                    case KeyEnum.Yelloworangesd:
+                    case KeyEnum.Yelloworange:
+                        key = Converter.First(o => o.Item1.IsMatch(code) && o.Item2.Code == KeyEnum.Yelloworange);
                         InputManager.Up.Yellow();
                         InputManager.Up.Orange();
                         break;
-                    case KeyEnum.BLUEORANGESU:
-                    case KeyEnum.BLUEORANGESD:
-                    case KeyEnum.BLUEORANGE:
-                        key = converter.First(o => o.Item1.IsMatch(code) && o.Item2.code == KeyEnum.BLUEORANGE);
+                    case KeyEnum.Blueorangesu:
+                    case KeyEnum.Blueorangesd:
+                    case KeyEnum.Blueorange:
+                        key = Converter.First(o => o.Item1.IsMatch(code) && o.Item2.Code == KeyEnum.Blueorange);
                         InputManager.Up.Blue();
                         InputManager.Up.Orange();
                         break;
                 }
 
-                oldKey = KeyEnum.NULL;
+                _oldKey = KeyEnum.Null;
             }
 
             
-            Console.WriteLine($"Fret {key.Item2.code} {(key.Item2.isDown ? "is down." : "is up.")}");
+            Console.WriteLine(count == 1 ? $"Fret {key.Item2.Code} {(key.Item2.IsDown ? "is down." : "is up.")}" : $"Accelerometer moving at Speed {0}");
         }
     }
 
     struct Key {
-        public KeyEnum code;
-        public bool isDown;
+        public KeyEnum Code;
+        public bool IsDown;
 
         public Key(KeyEnum ke, bool b) {
-            code = ke;
-            isDown = b;
+            Code = ke;
+            IsDown = b;
         }
     }
 
     enum KeyEnum {
-        GREEN,
-        RED,
-        YELLOW,
-        BLUE,
-        ORANGE,
-        STRUM_UP,
-        STRUM_DOWN,
-        STRUM_RELEASE,
-        GREENRED,
-        GREENYELLOW,
-        GREENBLUE,
-        GREENORANGE,
-        REDYELLOW,
-        REDBLUE,
-        REDORANGE,
-        YELLOWBLUE,
-        YELLOWORANGE,
-        BLUEORANGE,
-        GREENSU,
-        REDSU,
-        YELLOWSU,
-        BLUESU,
-        ORANGESU,
-        GREENSD,
-        REDSD,
-        YELLOWSD,
-        BLUESD,
-        ORANGESD,
-        GREENREDSU,
-        GREENYELLOWSU,
-        GREENBLUESU,
-        GREENORANGESU,
-        REDYELLOWSU,
-        REDBLUESU,
-        REDORANGESU,
-        YELLOWBLUESU,
-        YELLOWORANGESU,
-        BLUEORANGESU,
-        GREENREDSD,
-        GREENYELLOWSD,
-        GREENBLUESD,
-        GREENORANGESD,
-        REDYELLOWSD,
-        REDBLUESD,
-        REDORANGESD,
-        YELLOWBLUESD,
-        YELLOWORANGESD,
-        BLUEORANGESD,
-        WHAMMY,
-        NULL,
-        STARTBUTTON,
-        MENUBUTTON
+        Accelerometer,
+        Green,
+        Red,
+        Yellow,
+        Blue,
+        Orange,
+        StrumUp,
+        StrumDown,
+        StrumRelease,
+        Greenred,
+        Greenyellow,
+        Greenblue,
+        Greenorange,
+        Redyellow,
+        Redblue,
+        Redorange,
+        Yellowblue,
+        Yelloworange,
+        Blueorange,
+        Greensu,
+        Redsu,
+        Yellowsu,
+        Bluesu,
+        Orangesu,
+        Greensd,
+        Redsd,
+        Yellowsd,
+        Bluesd,
+        Orangesd,
+        Greenredsu,
+        Greenyellowsu,
+        Greenbluesu,
+        Greenorangesu,
+        Redyellowsu,
+        Redbluesu,
+        Redorangesu,
+        Yellowbluesu,
+        Yelloworangesu,
+        Blueorangesu,
+        Greenredsd,
+        Greenyellowsd,
+        Greenbluesd,
+        Greenorangesd,
+        Redyellowsd,
+        Redbluesd,
+        Redorangesd,
+        Yellowbluesd,
+        Yelloworangesd,
+        Blueorangesd,
+        Whammy,
+        Null,
+        Startbutton,
+        Menubutton
     }
 }

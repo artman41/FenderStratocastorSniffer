@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Threading;
 
@@ -6,6 +7,9 @@ namespace GuitarSniffer {
     public class InputManager {
         static int StrumDelay = 30;
 
+        private static int AccelerometerMinSpeed = 113; //0x71
+        private static int AccelerometerMaxSpeed = 255; //0xFF
+        
         public static void Start() {
             var t = new Thread(o => {
                 keybd_event(VK_RETURN, 0x45, KEYEVENTF_EXTENDEDKEY | 0, (UIntPtr) 0);
@@ -22,6 +26,14 @@ namespace GuitarSniffer {
             });
             t.Start();
             t.Join();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="speed">Takes as a Hex Value</param>
+        public static void Accelerometer(string speed) {
+            Console.WriteLine($"Current speed is {Convert.ToInt32(speed, 16) - AccelerometerMinSpeed}");
         }
         
         public struct Up {
