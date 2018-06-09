@@ -39,20 +39,36 @@ namespace GuitarSniffer {
             var devices = LivePacketDevice.AllLocalMachine; //get all the connected wifi devices
             LivePacketDevice xboneAdapter = null;
             try {
-                xboneAdapter = devices.First(x =>
-                    x.Description.ToLower().Contains("rpcap")); //get the wifi device with name 'rpcap' (usb adapter)
-            } catch (FileNotFoundException ex) {
-                Console.WriteLine("Please plug in the Xbox One Adapter!");
-                Console.Read();
-                Environment.Exit(-1);
+                xboneAdapter = devices.FirstOrDefault(x => x.Description.ToLower().Contains("rpcap")) ?? devices.FirstOrDefault(x =>
+                                   x.Description.ToLower().Contains("MT7612US_RL".ToLower())); //get the wifi device with name 'rpcap' (usb adapter) 
+                if(xboneAdapter != null) Console.WriteLine("Xbox One Adapter found!");
+            } catch (Exception ex) {
+                    Console.WriteLine("Please plug in the Xbox One Adapter!");
+                    Console.Read();
+                    Environment.Exit(-1);
             }
 
-            using (PacketCommunicator communicator = xboneAdapter.Open(45, PacketDeviceOpenAttributes.Promiscuous, 50)
-            ) {
-                while (true) {
-                    var result = communicator.ReceiveSomePackets(out int packetsSniffed, 5,
-                        PacketHandler);
+            try {
+                using (PacketCommunicator communicator =
+                    xboneAdapter.Open(45, PacketDeviceOpenAttributes.Promiscuous, 50)
+                ) {
+                    while (true) {
+                        var result = communicator.ReceiveSomePackets(out int packetsSniffed, 5,
+                            PacketHandler);
+                    }
                 }
+            }
+            catch (NullReferenceException ex) {
+                Console.WriteLine("Please plug in the Xbox One Adapter!");
+                Console.WriteLine(ex.Message);
+                Console.ReadLine();
+                Console.WriteLine("Currently Connected Devices:");
+                foreach (var livePacketDevice in devices) {
+                    Console.WriteLine($"{livePacketDevice.Name} | {livePacketDevice.Description}");
+                }
+
+                Console.ReadLine();
+                Environment.Exit(-1);
             }
         }
 
@@ -67,8 +83,12 @@ namespace GuitarSniffer {
             if (packet.Length != 40) return;
 
             var data = packet.Buffer;
+            
+            //Console.WriteLine($"TOTAL PACKET:{Environment.NewLine}{BitConverter.ToString(data)}");
 
             byte[] useableData = data.ReadBytes(30, 7);
+            
+            //Console.WriteLine($"TRIMMED PACKET:{Environment.NewLine}{BitConverter.ToString(useableData)}");
 
 //            SECTIONS
 //            0 : MENU
