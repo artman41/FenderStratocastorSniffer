@@ -1,10 +1,13 @@
-﻿using System;
+﻿//#define SHOWPACKET
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Policy;
 using System.Text.RegularExpressions;
+using Microsoft.SqlServer.Server;
 using PcapDotNet.Core;
 using PcapDotNet.Packets;
 
@@ -33,15 +36,14 @@ namespace GuitarSniffer {
         private const byte Dpad_Left = 0x04;
         private const byte Dpad_Right = 0x08;
 
-        //#define SHOWPACKET
-
         public void Start() {
             var devices = LivePacketDevice.AllLocalMachine; //get all the connected wifi devices
             LivePacketDevice xboneAdapter = null;
             try {
                 xboneAdapter = devices.FirstOrDefault(x => x.Description.ToLower().Contains("rpcap")) ?? devices.FirstOrDefault(x =>
-                                   x.Description.ToLower().Contains("MT7612US_RL".ToLower())); //get the wifi device with name 'rpcap' (usb adapter) 
-                if(xboneAdapter != null) Console.WriteLine("Xbox One Adapter found!");
+                                   x.Description.ToLower().Contains("MT7612US_RL".ToLower())); //get the wifi device with name 'rpcap' (usb adapter)  MT7612US_RL
+                if(xboneAdapter != null)
+                    Console.WriteLine("Xbox One Adapter found!");
             } catch (Exception ex) {
                     Console.WriteLine("Please plug in the Xbox One Adapter!");
                     Console.Read();
@@ -78,7 +80,7 @@ namespace GuitarSniffer {
         };
 
         byte fretCounter;
-
+        
         private void PacketHandler(Packet packet) {
             if (packet.Length != 40) return;
 
@@ -110,10 +112,11 @@ namespace GuitarSniffer {
                 Strum = useableData[1],
                 Accel = useableData[2],
                 Whammy = useableData[3],
-                Slider = useableData[4],
+                Slider = useableData[4]
             };
 
-            if (oldDataValue.Slider == 0xFF) oldDataValue.Slider = dv.Slider;
+            if (oldDataValue.Slider == 0xFF)
+                oldDataValue.Slider = dv.Slider;
 
             #region Top Frets
 
@@ -183,12 +186,18 @@ namespace GuitarSniffer {
 
             if ((fretCounter ^ Button_Start) < fretCounter) {
                 InputManager.Start(true);
+                dv.Start = true;
                 fretCounter ^= Button_Start;
+            } else if(oldDataValue.Start) {
+                InputManager.Start(false);
             }
 
             if ((fretCounter ^ Button_Menu) < fretCounter) {
                 InputManager.Menu(true);
+                dv.Menu = true;
                 fretCounter ^= Button_Menu;
+            } else if(oldDataValue.Menu){
+                InputManager.Menu(false);
             }
 
             #endregion
@@ -197,17 +206,17 @@ namespace GuitarSniffer {
 
             if (dv.Strum != oldDataValue.Strum) {
                 if ((dv.Strum ^ Strum_Up) == 0) {
-                    InputManager.Strum(1);
+                    InputManager.Strum(States.StrumState.Up);
                 } else if ((dv.Strum ^ Strum_Down) == 0) {
-                    InputManager.Strum(2);
+                    InputManager.Strum(States.StrumState.Down);
                 } else {
                     fretCounter = (byte) (dv.Strum ^ Fret_Orange);
                     if ((fretCounter ^ Strum_Up) == 0) {
-                        InputManager.Strum(1);
+                        InputManager.Strum(States.StrumState.Up);
                     } else if ((fretCounter ^ Strum_Down) == 0) {
-                        InputManager.Strum(2);
+                        InputManager.Strum(States.StrumState.Down);
                     } else {
-                        InputManager.Strum(0);
+                        InputManager.Strum(States.StrumState.Released);
                     }
                 }
             }
@@ -227,15 +236,15 @@ namespace GuitarSniffer {
             if (dv.Slider != oldDataValue.Slider) {
                 oldDataValue.Slider = dv.Slider;
                 if ((dv.Slider ^ Slider_Pos1) == 0) {
-                    InputManager.Slider(1);
+                    InputManager.Slider(States.SliderState.Pos1);
                 } else if ((dv.Slider ^ Slider_Pos2) == 0) {
-                    InputManager.Slider(2);
+                    InputManager.Slider(States.SliderState.Pos2);
                 } else if ((dv.Slider ^ Slider_Pos3) == 0) {
-                    InputManager.Slider(3);
+                    InputManager.Slider(States.SliderState.Pos3);
                 } else if ((dv.Slider ^ Slider_Pos4) == 0) {
-                    InputManager.Slider(4);
+                    InputManager.Slider(States.SliderState.Pos4);
                 } else if ((dv.Slider ^ Slider_Pos5) == 0) {
-                    InputManager.Slider(5);
+                    InputManager.Slider(States.SliderState.Pos5);
                 }
             }
 
@@ -354,6 +363,8 @@ namespace GuitarSniffer {
             Fret_BottomRed,
             Fret_BottomYellow,
             Fret_BottomBlue,
-            Fret_BottomOrange;
+            Fret_BottomOrange,
+            Start,
+            Menu;
     }
 }
