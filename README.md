@@ -1,5 +1,7 @@
 # FenderStratocastorSniffer
 
+Core can be found [here](https://github.com/artman41/GuitarSnifferCore)
+
 ## Requirements
 
 * [WinPCap](https://www.winpcap.org/install/bin/WinPcap_4_1_3.exe) is required to run this
