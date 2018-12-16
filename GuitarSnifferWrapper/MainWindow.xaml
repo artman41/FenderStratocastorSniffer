@@ -1,0 +1,35 @@
+﻿<Window x:Class="GuitarSnifferWrapper.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GuitarSnifferWrapper"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="388.217" Width="625.717">
+    <Grid>
+        <TabControl>
+            <TabItem Header="Active Keys">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+            <TabItem Header="Core">
+                <Grid Background="#FFE5E5E5">
+                    <TextBox TextWrapping="Wrap" x:Name="TextBoxCore" IsEnabled="False"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Packets">
+                <Grid Background="#FFE5E5E5">
+                    <ListView x:Name="ListViewPackets">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Timestamp" DisplayMemberBinding="{Binding Time}"/>
+                                <GridViewColumn Header="Sent" DisplayMemberBinding="{Binding Packet}"/>
+                                <GridViewColumn Header="Received" DisplayMemberBinding="{Binding Return}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</Window>
