@@ -26,20 +26,23 @@ namespace GuitarSnifferWrapper {
 
         const string githubLatest = "https://api.github.com/repos/artman41/GuitarSnifferCore/releases/latest";
 
+        public static MainWindow MainWindow { get; set; }
+
         public static void Init(MainWindow mw) {
+            MainWindow = mw;
             DownloadRelease();
-            StartThreads(mw);
+            StartThreads();
         }
 
-        static void StartThreads(MainWindow mw) {
-            CoreWatcher = GetCoreWatcherThread(mw);
+        static void StartThreads() {
+            CoreWatcher = GetCoreWatcherThread();
             CoreWatcher.IsBackground = true;
             CoreWatcher.Start();
-            PacketServerThread = new Thread(() => PacketServer.Create(mw).Start()) {
+            PacketServerThread = new Thread(() => PacketServer.Instance.Start()) {
                 IsBackground = true
             };
             PacketServerThread.Start();
-            GuitarListenerThread = new Thread(() => GuitarListener.Create(mw).Start()) {
+            GuitarListenerThread = new Thread(() => GuitarListener.Instance.Start()) {
                 IsBackground = true
             };
             GuitarListenerThread.Start();
@@ -47,6 +50,7 @@ namespace GuitarSnifferWrapper {
 
         static void DownloadRelease() {
             if(CoreLocation.GetDirectories().Length <= 0) {
+                MainWindow.GridDownload.Visibility = Visibility.Visible;
                 using (var client = new WebClient()) {
                     client.Headers.Add("user-agent", "GuitarSnifferWrapper");
                     var jsonS = client.DownloadString(githubLatest);
@@ -57,6 +61,7 @@ namespace GuitarSnifferWrapper {
                 CoreLocation.Create();
                 ZipFile.ExtractToDirectory("GuitarSnifferCore.zip", CoreLocation.FullName);
                 File.Delete("GuitarSnifferCore.zip");
+                MainWindow.GridDownload.Visibility = Visibility.Hidden;
             }
         }
 
@@ -69,7 +74,7 @@ namespace GuitarSnifferWrapper {
             CoreWatcher.Abort();
         }
 
-        static Thread GetCoreWatcherThread(MainWindow mw) {
+        static Thread GetCoreWatcherThread() {
             return new Thread(() => {
                 var StartInfo = new ProcessStartInfo {
                     UseShellExecute = false,
@@ -83,18 +88,18 @@ namespace GuitarSnifferWrapper {
 
                 CoreProcess = Process.Start(StartInfo);
                 CoreProcess.OutputDataReceived += (object sender, DataReceivedEventArgs e) => {
-                    Trace.WriteLine(e.Data);
+                    // Trace.WriteLine(e.Data);
                     try {
-                        mw.Dispatcher.Invoke(() => mw.AddToTextboxCore($"[stdout] {e.Data ?? string.Empty}"));
+                        MainWindow.Dispatcher.Invoke(() => MainWindow.AddToTextboxCore($"[stdout] {e.Data ?? string.Empty}"));
                     } catch(Exception ex) {
                         Debug.WriteLine(ex);
                     }
                 };
 
                 CoreProcess.ErrorDataReceived += (object sender, DataReceivedEventArgs e) => {
-                    Trace.WriteLine(e.Data);
+                    // Trace.WriteLine(e.Data);
                     try {
-                        mw.Dispatcher.Invoke(() => mw.AddToTextboxCore($"[stderr] {e.Data ?? string.Empty}"));
+                        MainWindow.Dispatcher.Invoke(() => MainWindow.AddToTextboxCore($"[stderr] {e.Data ?? string.Empty}"));
                     } catch (Exception ex) {
                         Debug.WriteLine(ex);
                     }

@@ -10,19 +10,15 @@ using System.Windows;
 
 namespace GuitarSnifferWrapper {
     public class GuitarListener {
-        public static GuitarListener Instance { get; set; } = null;
-        MainWindow MainWindow { get; set; }
-
-        private GuitarListener(MainWindow mw) {
-            Instance = this;
-            MainWindow = mw;
+        static GuitarListener _Instance;
+        public static GuitarListener Instance { get {
+                if (_Instance == null)
+                    _Instance = new GuitarListener();
+                return _Instance;
+            }
         }
 
-        public static GuitarListener Create(MainWindow mw) {
-            if (Instance != null)
-                return Instance;
-            return new GuitarListener(mw);
-        }
+        private GuitarListener() { }
 
         internal void Start() {
             var devices = LivePacketDevice.AllLocalMachine; //get all the connected wifi devices
@@ -45,7 +41,7 @@ namespace GuitarSnifferWrapper {
                     while (true) {
                         try {
                             communicator.ReceiveSomePackets(out int packetsSniffed, 5, PacketServer.Instance.AddPacket);
-                        } catch (InvalidOperationException ex) {
+                        } catch (InvalidOperationException) {
                             // looks like this can throw if you plug a controller in via usb
                         }
                      }
