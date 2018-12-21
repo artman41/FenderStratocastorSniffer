@@ -57,7 +57,15 @@ namespace GuitarSnifferWrapper {
 
     #endregion
 
+
     public struct GuitarPacket {
+
+        const int StartIndex_TopFret = 0;
+        const int StartIndex_BottomFret = 5;
+        const int StartIndex_Strum = 10;
+        const int StartIndex_Buttons = 11;
+        const int StartIndex_Motion = 13;
+        const int StartIndex_Slider = 15;
 
         public Frets TopFrets { get; set; }
         public Frets BottomFrets { get; set; }
@@ -67,25 +75,25 @@ namespace GuitarSnifferWrapper {
         public Slider Slider { get; set; }
 
         public GuitarPacket(byte[] data) : this() {
-            TopFrets = GetFrets(data.Take(5).ToArray());
-            BottomFrets = GetFrets(data.Skip(5).Take(5).ToArray());
-            Strum = GetStrum(data.Skip(5).Skip(5).Take(1).First());
-            Buttons = GetButtons(data.Skip(5).Skip(5).Skip(1).Take(2).ToArray());
-            Motion = GetMotion(data.Skip(5).Skip(5).Skip(1).Skip(2).Take(2).ToArray());
-            Slider = GetSlider(data.Skip(5).Skip(5).Skip(1).Skip(2).Skip(2).Take(1).First());
+            TopFrets = GetFrets(data);
+            BottomFrets = GetFrets(data, StartIndex_BottomFret);
+            Strum = GetStrum(data);
+            Buttons = GetButtons(data);
+            Motion = GetMotion(data);
+            Slider = GetSlider(data);
         }
 
-        Frets GetFrets(byte[] data) {
-            var g = Convert.ToBoolean(data[0]);
-            var r = Convert.ToBoolean(data[1]);
-            var y = Convert.ToBoolean(data[2]);
-            var b = Convert.ToBoolean(data[3]);
-            var o = Convert.ToBoolean(data[4]);
+        Frets GetFrets(byte[] data, int startIndex = 0) {
+            var g = Convert.ToBoolean(data[startIndex + 0]);
+            var r = Convert.ToBoolean(data[startIndex + 1]);
+            var y = Convert.ToBoolean(data[startIndex + 2]);
+            var b = Convert.ToBoolean(data[startIndex + 3]);
+            var o = Convert.ToBoolean(data[startIndex + 4]);
             return new Frets(g, r, y, b, o);
         }
 
-        Strum GetStrum(byte data) {
-            switch (data) {
+        Strum GetStrum(byte[] data) {
+            switch (data[StartIndex_Strum]) {
                 case 1:
                     return Strum.DOWN;
                 case 2:
@@ -96,17 +104,17 @@ namespace GuitarSnifferWrapper {
         }
 
         Buttons GetButtons(byte[] data) {
-            var s = Convert.ToBoolean(data[0]);
-            var m = Convert.ToBoolean(data[1]);
+            var s = Convert.ToBoolean(data[StartIndex_Buttons + 0]);
+            var m = Convert.ToBoolean(data[StartIndex_Buttons + 1]);
             return new Buttons(s, m);
         }
 
         Motion GetMotion(byte[] data) {
-            return new Motion(data[0], data[1]);
+            return new Motion(data[StartIndex_Motion + 0], data[StartIndex_Motion + 1]);
         }
 
-        Slider GetSlider(byte data) {
-            switch (data) {
+        Slider GetSlider(byte[] data) {
+            switch (data[StartIndex_Slider]) {
                 default:
                     return Slider.Position1;
                 case 2:

@@ -63,6 +63,7 @@ namespace GuitarSnifferWrapper {
 
         private void UpdateMotion(Motion motion) {
             try {
+                // The constant UI updates freeze the UI thread and cause a knock-on effect slowing everything else down
                 LabelAcceleration.Dispatcher.Invoke(() => {
                     //LabelAcceleration.Content = Convert.ToInt32(motion.Acceleration);
                 }, DispatcherPriority.Background);
@@ -73,6 +74,7 @@ namespace GuitarSnifferWrapper {
             GamePad.State[0].LeftTrigger = motion.Acceleration;
 
             try {
+                // The constant UI updates freeze the UI thread and cause a knock-on effect slowing everything else down
                 LabelWhammy.Dispatcher.Invoke(() => {
                     //LabelWhammy.Content = Convert.ToInt32(motion.Whammy);
                 }, DispatcherPriority.Background);
@@ -245,15 +247,16 @@ namespace GuitarSnifferWrapper {
             return GamePadControl.None;
         }
 
+        // The constant UI updates freeze the UI thread and cause a knock-on effect slowing everything else down
         private void OnPacketDecoded(byte[] outgoingData, byte[] incomingData) {
-            var incomingDataString = string.Join("-", incomingData.Select(o => Convert.ToString(o, 16)));
-            var time = DateTime.Now.ToLongTimeString();
-            var listItem = new LItem(time, BitConverter.ToString(outgoingData), incomingDataString);
-            try {
-                ListViewPackets.Dispatcher.BeginInvoke((Action)(() => ListViewPackets.Items.Add(listItem)));
-            } catch (Exception ex) {
-                Debug.WriteLine(ex.Message);
-            }
+            //var incomingDataString = string.Join("-", incomingData.Select(o => Convert.ToString(o, 16)));
+            //var time = DateTime.Now.ToLongTimeString();
+            //var listItem = new LItem(time, BitConverter.ToString(outgoingData), incomingDataString);
+            //try {
+            //    ListViewPackets.Dispatcher.BeginInvoke((Action)(() => ListViewPackets.Items.Add(listItem)));
+            //} catch (Exception ex) {
+            //    Debug.WriteLine(ex.Message);
+            //}
         }
 
         private void ListViewPackets_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {
@@ -263,11 +266,12 @@ namespace GuitarSnifferWrapper {
             }
         }
 
+        // The constant UI updates freeze the UI thread and cause a knock-on effect slowing everything else down
         public void AddToTextboxCore(string s) {
-            TextBoxCore.Dispatcher.Invoke(() => {
-                TextBoxCore.Text += ($"{s}{Environment.NewLine}");
-            });
-            CoreOutput += s + Environment.NewLine;
+            //TextBoxCore.Dispatcher.Invoke(() => {
+            //    TextBoxCore.Text += ($"{s}{Environment.NewLine}");
+            //});
+            //CoreOutput += s + Environment.NewLine;
         }
 
         private void OnExit(object sender, ExitEventArgs e) {

@@ -57,7 +57,7 @@
                 <TabItem.Header>
                     <Grid Width="140" VerticalAlignment="Center" HorizontalAlignment="Center">
                         <TextBlock Text="Core" Margin="0,0,112,0"></TextBlock>
-                        <CheckBox x:Name="CheckBoxScrollCore" VerticalAlignment="Center" HorizontalAlignment="Center" Width="107" IsChecked="True" Margin="33,0,0,1">Scroll to Bottom</CheckBox>
+                        <CheckBox x:Name="CheckBoxScrollCore" VerticalAlignment="Center" HorizontalAlignment="Center" Width="107" IsChecked="False" Margin="33,0,0,1">Scroll to Bottom</CheckBox>
                     </Grid>
                 </TabItem.Header>
                 <Grid Background="#FFE5E5E5">
