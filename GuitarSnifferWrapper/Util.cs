@@ -50,7 +50,9 @@ namespace GuitarSnifferWrapper {
 
         static void DownloadRelease() {
             if(CoreLocation.GetDirectories().Length <= 0) {
-                MainWindow.GridDownload.Visibility = Visibility.Visible;
+                MainWindow.Dispatcher.Invoke(() => {
+                    MainWindow.GridDownload.Visibility = Visibility.Visible;
+                });
                 using (var client = new WebClient()) {
                     client.Headers.Add("user-agent", "GuitarSnifferWrapper");
                     var jsonS = client.DownloadString(githubLatest);
@@ -61,13 +63,16 @@ namespace GuitarSnifferWrapper {
                 CoreLocation.Create();
                 ZipFile.ExtractToDirectory("GuitarSnifferCore.zip", CoreLocation.FullName);
                 File.Delete("GuitarSnifferCore.zip");
-                MainWindow.GridDownload.Visibility = Visibility.Hidden;
+                MainWindow.Dispatcher.Invoke(() => {
+                    MainWindow.GridDownload.Visibility = Visibility.Hidden;
+                });
             }
         }
 
         public static void OnExit() {
             try {
                 Process.GetProcessesByName("erl").ToList().ForEach(o => o.Kill());
+                Process.GetProcessesByName("epmd").ToList().ForEach(o => o.Kill());
             } catch(Exception ex) {
                 Debug.WriteLine(ex.Message);
             }

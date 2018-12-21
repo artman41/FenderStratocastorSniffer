@@ -2,6 +2,7 @@
 using PcapDotNet.Packets;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -35,14 +36,13 @@ namespace GuitarSnifferWrapper {
             }
 
             try {
-                using (PacketCommunicator communicator =
-                    xboneAdapter.Open(45, PacketDeviceOpenAttributes.Promiscuous, 50)
-                ) {
+                using (PacketCommunicator communicator = xboneAdapter.Open(45, PacketDeviceOpenAttributes.Promiscuous, 50)) {
                     while (true) {
                         try {
                             communicator.ReceiveSomePackets(out int packetsSniffed, 5, PacketServer.Instance.AddPacket);
-                        } catch (InvalidOperationException) {
+                        } catch (Exception ex) {
                             // looks like this can throw if you plug a controller in via usb
+                            Debug.WriteLine(ex.Message);
                         }
                      }
                 }

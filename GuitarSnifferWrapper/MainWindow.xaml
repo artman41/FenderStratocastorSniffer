@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource self}}"
         x:Name="Window"
-        Title="MainWindow" Height="406.217" Width="625.717">
+        Title="MainWindow" Height="352.217" Width="1050" ResizeMode="NoResize">
     <Grid>
         <Grid x:Name="GridDownload" Margin="532,7,10,339" Visibility="Hidden">
             <TextBlock FontSize="8" FontStyle="Italic" TextAlignment="Center">Downloading Core...</TextBlock>
@@ -15,42 +15,40 @@
         <TabControl>
             <TabItem Header="Active Keys">
                 <Grid Background="#FFE5E5E5">
-                    <Grid Margin="0,0,0,153">
-                        <GroupBox Header="Top Frets" HorizontalAlignment="Center" VerticalAlignment="Center" Height="179" Width="126" Margin="10,10,476,5">
+                    <Grid Margin="0,0,422,0">
+                        <GroupBox Header="Top Frets" HorizontalAlignment="Center" VerticalAlignment="Center" Height="273" Width="126" Margin="12,10,476,10">
                             <Grid>
-                                <Label x:Name="LabelTopGreen" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,10,10,123" Content="Green" Width="94" Height="24"/>
-                                <Label x:Name="LabelTopRed" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,39,10,94" Content="Red" Width="94" Height="24"/>
-                                <Label x:Name="LabelTopYellow" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,68,10,65" Content="Yellow" Width="94" Height="24"/>
-                                <Label x:Name="LabelTopBlue" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,97,10,36" Content="Blue" Width="94" Height="24"/>
-                                <Label x:Name="LabelTopOrange" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,126,10,0" Content="Orange" Width="94" Height="31"/>
+                                <Label x:Name="LabelTopGreen" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,20,10,207" Content="Green" Width="94" Height="24"/>
+                                <Label x:Name="LabelTopRed" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,49,10,178" Content="Red" Width="94" Height="24"/>
+                                <Label x:Name="LabelTopYellow" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,78,10,149" Content="Yellow" Width="94" Height="24"/>
+                                <Label x:Name="LabelTopBlue" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,107,10,120" Content="Blue" Width="94" Height="24"/>
+                                <Label x:Name="LabelTopOrange" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,136,10,84" Content="Orange" Width="94" Height="31"/>
                             </Grid>
                         </GroupBox>
-                        <GroupBox Header="Bottom Frets" HorizontalAlignment="Center" VerticalAlignment="Center" Height="179" Width="126" Margin="161,10,325,5">
+                        <GroupBox Header="Bottom Frets" HorizontalAlignment="Center" VerticalAlignment="Center" Height="273" Width="126" Margin="163,10,325,10">
                             <Grid>
-                                <Label x:Name="LabelBottomGreen" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,10,10,123" Content="Green" Width="94" Height="24"/>
-                                <Label x:Name="LabelBottomRed" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,39,10,94" Content="Red" Width="94" Height="24"/>
-                                <Label x:Name="LabelBottomYellow" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,68,10,65" Content="Yellow" Width="94" Height="24"/>
-                                <Label x:Name="LabelBottomBlue" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,97,10,36" Content="Blue" Width="94" Height="24"/>
-                                <Label x:Name="LabelBottomOrange" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,126,10,0" Content="Orange" Width="94" Height="31"/>
+                                <Label x:Name="LabelBottomGreen" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,18,10,209" Content="Green" Width="94" Height="24"/>
+                                <Label x:Name="LabelBottomRed" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,47,10,180" Content="Red" Width="94" Height="24"/>
+                                <Label x:Name="LabelBottomYellow" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,76,10,151" Content="Yellow" Width="94" Height="24"/>
+                                <Label x:Name="LabelBottomBlue" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,105,10,122" Content="Blue" Width="94" Height="24"/>
+                                <Label x:Name="LabelBottomOrange" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,134,10,86" Content="Orange" Width="94" Height="31"/>
                             </Grid>
                         </GroupBox>
-                        <GroupBox Header="Misc" HorizontalAlignment="Center" VerticalAlignment="Center" Height="179" Width="289" Margin="313,10,10,5">
+                        <GroupBox Header="Misc" HorizontalAlignment="Center" VerticalAlignment="Center" Height="273" Width="289" Margin="315,10,10,10">
                             <Grid>
-                                <Label x:Name="LabelStart" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,10,10,123" Content="Start" Width="257" Height="24"/>
-                                <Label x:Name="LabelMenu" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,39,10,94" Content="Menu" Width="257" Height="24"/>
-                                <Label x:Name="LabelSlider" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,68,217,65" Content="Slider" Width="50" Height="24"/>
-                                <Label x:Name="LabelSliderValue" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="65,68,10,65" Content="1" Width="202" Height="24"/>
-                                <Label x:Name="LabelStrum" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,97,217,36" Content="Strum" Width="50" Height="24"/>
-                                <Label x:Name="LabelStrumValue" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="65,97,10,36" Content="NONE" Width="202" Height="24"/>
+                                <Label x:Name="LabelStart" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,15,10,212" Content="Start" Width="257" Height="24"/>
+                                <Label x:Name="LabelMenu" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,44,10,183" Content="Menu" Width="257" Height="24"/>
+                                <Label x:Name="LabelSlider" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,73,217,154" Content="Slider" Width="50" Height="24"/>
+                                <Label x:Name="LabelSliderValue" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="65,73,10,154" Content="1" Width="202" Height="24"/>
+                                <Label x:Name="LabelStrum" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,102,217,125" Content="Strum" Width="50" Height="24"/>
+                                <Label x:Name="LabelStrumValue" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="65,102,10,125" Content="NONE" Width="202" Height="24"/>
                             </Grid>
                         </GroupBox>
-                    </Grid>
-                    <Grid Height="153"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,194,0,0" Width="612">
-                        <GroupBox Header="Acceleration" Margin="10,10,10,86">
-                            <Slider x:Name="SliderAcceleration" HorizontalAlignment="Center" VerticalAlignment="Center" Width="572" Margin="10,9,-2,2" Height="23" Minimum="0" Maximum="255"/>
+                        <GroupBox Header="Acceleration" Margin="637,156,-410,5">
+                            <Label x:Name="LabelAcceleration"/>
                         </GroupBox>
-                        <GroupBox Header="Whammy" Margin="10,72,10,10">
-                            <Slider x:Name="SliderWhammy" HorizontalAlignment="Center" VerticalAlignment="Center" Width="572" Margin="10,9,-2,2" Height="23" Minimum="0" Maximum="255"/>
+                        <GroupBox Header="Whammy" Margin="637,10,-410,146">
+                            <Label x:Name="LabelWhammy"/>
                         </GroupBox>
                     </Grid>
                 </Grid>

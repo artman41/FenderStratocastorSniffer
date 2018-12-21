@@ -36,9 +36,9 @@ namespace GuitarSnifferWrapper {
             DoHandleGuitarPacket += HandlePacket;
         }
 
-        public void OnPacketDecoded(string outgoingData, byte[] incomingDataBytes, string incomingDataString) {
-            if(incomingDataBytes.Length == 16)
-                DoHandleGuitarPacket?.Invoke(new GuitarPacket(incomingDataBytes));
+        public void OnPacketDecoded(byte[] outgoingData, byte[] incomingData) {
+            if(incomingData.Length == 16)
+                DoHandleGuitarPacket?.Invoke(new GuitarPacket(incomingData));
         }
 
         void HandlePacket(GuitarPacket packet) {

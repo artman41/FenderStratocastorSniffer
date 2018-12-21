@@ -52,33 +52,33 @@ namespace GuitarSnifferWrapper {
 
         public void InitEventHandlers() {
             Application.Current.Exit += OnExit;
-            PacketServer.Instance.OnPacketDecoded += OnPacketDecoded;
             InputManager.Instance.UpdateTopFrets += UpdateTopFrets;
             InputManager.Instance.UpdateBottomFrets += UpdateBottomFrets;
             InputManager.Instance.UpdateButtons += UpdateButtons;
             InputManager.Instance.UpdateSlider += UpdateSlider;
             InputManager.Instance.UpdateStrum += UpdateStrum;
             InputManager.Instance.UpdateMotion += UpdateMotion;
+            PacketServer.Instance.OnPacketDecoded += OnPacketDecoded;
         }
 
         private void UpdateMotion(Motion motion) {
-            //try {
-            //    SliderAcceleration.Dispatcher.Invoke(() => {
-            //        SliderAcceleration.Value = Convert.ToInt32(motion.Acceleration);
-            //    }, DispatcherPriority.Background);
+            try {
+                LabelAcceleration.Dispatcher.Invoke(() => {
+                    //LabelAcceleration.Content = Convert.ToInt32(motion.Acceleration);
+                }, DispatcherPriority.Background);
 
-            //} catch (Exception ex) {
-            //    Debug.WriteLine(ex.Message);
-            //}
+            } catch (Exception ex) {
+                Debug.WriteLine(ex.Message);
+            }
             GamePad.State[0].LeftTrigger = motion.Acceleration;
 
-            //try {
-            //    SliderWhammy.Dispatcher.Invoke(() => {
-            //        SliderWhammy.Value = Convert.ToInt32(motion.Whammy);
-            //    }, DispatcherPriority.Background);
-            //} catch (Exception ex) {
-            //    Debug.WriteLine(ex.Message);
-            //}
+            try {
+                LabelWhammy.Dispatcher.Invoke(() => {
+                    //LabelWhammy.Content = Convert.ToInt32(motion.Whammy);
+                }, DispatcherPriority.Background);
+            } catch (Exception ex) {
+                Debug.WriteLine(ex.Message);
+            }
             GamePad.State[0].RightTrigger = motion.Whammy;
 
             GamePad.Update();
@@ -87,13 +87,13 @@ namespace GuitarSnifferWrapper {
         Strum Strum { get; set; } = Strum.NONE;
 
         private void UpdateStrum(Strum strum) {
-            //try {
-            //    LabelStrumValue.Dispatcher.Invoke(() => {
-            //        LabelStrumValue.Content = strum.ToString();
-            //    }, DispatcherPriority.Background);
-            //} catch (Exception ex) {
-            //    Debug.WriteLine(ex.Message);
-            //}
+            try {
+                LabelStrumValue.Dispatcher.Invoke(() => {
+                    LabelStrumValue.Content = strum.ToString();
+                }, DispatcherPriority.Background);
+            } catch (Exception ex) {
+                Debug.WriteLine(ex.Message);
+            }
 
             if (strum != Strum) {
                 switch (Strum) {
@@ -124,64 +124,64 @@ namespace GuitarSnifferWrapper {
         }
 
         private void UpdateSlider(Slider slider) {
-            //try {
-            //    LabelSliderValue.Dispatcher.Invoke(() => {
-            //        LabelSliderValue.Content = slider.ToString();
-            //    }, DispatcherPriority.Background);
-            //} catch (Exception ex) {
-            //    Debug.WriteLine(ex.Message);
-            //}
+            try {
+                LabelSliderValue.Dispatcher.Invoke(() => {
+                    LabelSliderValue.Content = slider.ToString();
+                }, DispatcherPriority.Background);
+            } catch (Exception ex) {
+                Debug.WriteLine(ex.Message);
+            }
         }
 
         private void UpdateButtons(Buttons buttons) {
-            //try {
-            //    LabelStart.Dispatcher.Invoke(() => {
-            //        LabelStart.Foreground = buttons.Start ? Brushes.Green : Brushes.Black;
-            //    }, DispatcherPriority.Background);
-            //} catch (Exception ex) {
-            //    Debug.WriteLine(ex.Message);
-            //}
+            try {
+                LabelStart.Dispatcher.Invoke(() => {
+                    LabelStart.Foreground = buttons.Start ? Brushes.Green : Brushes.Black;
+                }, DispatcherPriority.Background);
+            } catch (Exception ex) {
+                Debug.WriteLine(ex.Message);
+            }
             if (buttons.Start)
                 GamePad.Use(GamePadControl.Start);
-            //try {
-            //    LabelStart.Dispatcher.Invoke(() => {
-            //        LabelMenu.Foreground = buttons.Menu ? Brushes.Green : Brushes.Black;
-            //    }, DispatcherPriority.Background);
-            //} catch (Exception ex) {
-            //    Debug.WriteLine(ex.Message);
-            //}
+            try {
+                LabelStart.Dispatcher.Invoke(() => {
+                    LabelMenu.Foreground = buttons.Menu ? Brushes.Green : Brushes.Black;
+                }, DispatcherPriority.Background);
+            } catch (Exception ex) {
+                Debug.WriteLine(ex.Message);
+            }
             if (buttons.Menu)
                 GamePad.Use(GamePadControl.Back);
         }
 
         private void UpdateTopFrets(Frets frets) {
             UpdateFrets(frets);
-            //try { 
-            //    Dispatcher.Invoke(() => {
-            //        LabelTopGreen.Foreground = frets.Green ? Brushes.Green : Brushes.Black;
-            //        LabelTopRed.Foreground = frets.Red ? Brushes.Green : Brushes.Black;
-            //        LabelTopYellow.Foreground = frets.Yellow ? Brushes.Green : Brushes.Black;
-            //        LabelTopBlue.Foreground = frets.Blue ? Brushes.Green : Brushes.Black;
-            //        LabelTopOrange.Foreground = frets.Orange ? Brushes.Green : Brushes.Black;
-            //    }, DispatcherPriority.Background);
-            //} catch (Exception ex) {
-            //    Debug.WriteLine(ex.Message);
-            //}
+            try {
+                Dispatcher.Invoke(() => {
+                    LabelTopGreen.Foreground = frets.Green ? Brushes.Green : Brushes.Black;
+                    LabelTopRed.Foreground = frets.Red ? Brushes.Green : Brushes.Black;
+                    LabelTopYellow.Foreground = frets.Yellow ? Brushes.Green : Brushes.Black;
+                    LabelTopBlue.Foreground = frets.Blue ? Brushes.Green : Brushes.Black;
+                    LabelTopOrange.Foreground = frets.Orange ? Brushes.Green : Brushes.Black;
+                }, DispatcherPriority.Background);
+            } catch (Exception ex) {
+                Debug.WriteLine(ex.Message);
+            }
         }
 
         private void UpdateBottomFrets(Frets frets) {
             UpdateFrets(frets, false);
-            //try { 
-            //    Dispatcher.Invoke(() => {
-            //        LabelBottomGreen.Foreground = frets.Green ? Brushes.Green : Brushes.Black;
-            //        LabelBottomRed.Foreground = frets.Red ? Brushes.Green : Brushes.Black;
-            //        LabelBottomYellow.Foreground = frets.Yellow ? Brushes.Green : Brushes.Black;
-            //        LabelBottomBlue.Foreground = frets.Blue ? Brushes.Green : Brushes.Black;
-            //        LabelBottomOrange.Foreground = frets.Orange ? Brushes.Green : Brushes.Black;
-            //    }, DispatcherPriority.Background);
-            //} catch (Exception ex) {
-            //    Debug.WriteLine(ex.Message);
-            //}
+            try { 
+                Dispatcher.Invoke(() => {
+                    LabelBottomGreen.Foreground = frets.Green ? Brushes.Green : Brushes.Black;
+                    LabelBottomRed.Foreground = frets.Red ? Brushes.Green : Brushes.Black;
+                    LabelBottomYellow.Foreground = frets.Yellow ? Brushes.Green : Brushes.Black;
+                    LabelBottomBlue.Foreground = frets.Blue ? Brushes.Green : Brushes.Black;
+                    LabelBottomOrange.Foreground = frets.Orange ? Brushes.Green : Brushes.Black;
+                }, DispatcherPriority.Background);
+            } catch (Exception ex) {
+                Debug.WriteLine(ex.Message);
+            }
         }
 
         enum FretColor {
@@ -208,10 +208,14 @@ namespace GuitarSnifferWrapper {
             }
         }
         void UpdateFret(FretColor c, bool b) {
-            if (b) {
-                GamePad.SetControl(GetControl(c));
-            } else {
-                GamePad.ReleaseControl(GetControl(c));
+            try {
+                if (b) {
+                    GamePad.SetControl(GetControl(c));
+                } else {
+                    GamePad.ReleaseControl(GetControl(c));
+                }
+            } catch(InvalidOperationException ex) {
+                Debug.WriteLine(ex.Message);
             }
         }
 
@@ -241,14 +245,15 @@ namespace GuitarSnifferWrapper {
             return GamePadControl.None;
         }
 
-        private void OnPacketDecoded(string outgoingData, byte[] incomingDataBytes, string incomingDataString) {
-            //var time = DateTime.Now.ToLongTimeString();
-            //var listItem = new LItem(time, outgoingData, incomingDataString);
-            //try {
-            //    ListViewPackets.Dispatcher.BeginInvoke((Action)(() => ListViewPackets.Items.Add(listItem)));
-            //} catch(Exception ex) {
-            //    Debug.WriteLine(ex.Message);
-            //}
+        private void OnPacketDecoded(byte[] outgoingData, byte[] incomingData) {
+            var incomingDataString = string.Join("-", incomingData.Select(o => Convert.ToString(o, 16)));
+            var time = DateTime.Now.ToLongTimeString();
+            var listItem = new LItem(time, BitConverter.ToString(outgoingData), incomingDataString);
+            try {
+                ListViewPackets.Dispatcher.BeginInvoke((Action)(() => ListViewPackets.Items.Add(listItem)));
+            } catch (Exception ex) {
+                Debug.WriteLine(ex.Message);
+            }
         }
 
         private void ListViewPackets_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {
@@ -259,10 +264,10 @@ namespace GuitarSnifferWrapper {
         }
 
         public void AddToTextboxCore(string s) {
-            //TextBoxCore.Dispatcher.Invoke(() => {
-            //    TextBoxCore.Text += ($"{s}{Environment.NewLine}");
-            //});
-            //CoreOutput += s + Environment.NewLine;
+            TextBoxCore.Dispatcher.Invoke(() => {
+                TextBoxCore.Text += ($"{s}{Environment.NewLine}");
+            });
+            CoreOutput += s + Environment.NewLine;
         }
 
         private void OnExit(object sender, ExitEventArgs e) {
