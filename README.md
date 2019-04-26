@@ -1,3 +1,7 @@
+# THIS PROJECT IS DEAD, PLEASE SEE THE [NEW](https://github.com/artman41/guitarsniffer) PROJECT INSTEAD
+
+---
+
 # FenderStratocastorSniffer
 
 Core can be found [here](https://github.com/artman41/GuitarSnifferCore)
